@@ -9,7 +9,9 @@ require 'pp'
 options = Hash.new(false)
 
 OptionParser.new do|opts|
-  opts.banner = "Usage: remail [options] file1 file2 ... \n\n"
+  opts.banner = "Usage: remail [options] file1 file2 ... \n" +
+                "       remail [options] directory\n" +
+                "       remail [options] -p\n\n"
   
   opts.on( '-u', '--username USERNAME', "Gmail Username" ) do|u|
     options[:user] = u
@@ -62,13 +64,16 @@ end
 
 
 
-unless options[:pop]
-  mail = []
-  ARGV.each do |f|
+mail = []
+ARGV.each do |f|
+  if File.directory?(f)
+    Dir[f+"*"].each { |m| mail << Mail.read(m)}
+  else
     mail <<  Mail.read(f)
   end
-else
-  mail = Mail.all
+end
+if options[:pop]
+  mail << Mail.all
 end
 
 mail.each do |mail|

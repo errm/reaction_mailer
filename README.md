@@ -20,7 +20,9 @@ Install it:
 ## Usage
 
     Usage: remail [options] file1 file2 ...
-
+           remail [options] directory
+           remail [options] -p
+           
     -u, --username USERNAME          Gmail Username
     -w, --password PASSWORD          Gmail Password
     -t, --to EMAIL                   Send the email to who?
