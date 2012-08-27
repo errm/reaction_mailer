@@ -73,6 +73,8 @@ end
 mail.each do |mail|
   mail.message_id = nil
   mail.to = options[:to] || mail.to
+  mail.cc = nil
+  mail.bcc = nil
   pp mail
   send = agree("Send this email?  ", true)
   puts ""
