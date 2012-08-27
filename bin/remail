@@ -64,8 +64,12 @@ end
 mail = []
 ARGV.each do |f|
   if File.directory?(f)
-    Dir[f+"*"].each { |m| mail << Mail.read(m)}
-  else
+    Dir[f+"*"].each do |m|
+      if File.file? m
+        mail << Mail.read(m)
+      end
+    end
+  elsif File.file? f
     mail <<  Mail.read(f)
   end
 end
