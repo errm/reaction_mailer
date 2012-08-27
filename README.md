@@ -29,11 +29,23 @@ Install it:
 
 ## Examples
 
-Send a file to a given email address
-    $ remail -t test@emailtesting.com EMAIL_FILE
-    
+Send an email to a given email address using a file
+    $ remail -t test@emailtesting.com mail.0.txt
+    Enter your gmail username: someone@gmail.com
+    Enter your gmail password: *********
+    #<Mail::Message:2244614900, Multipart: true, Headers:<Date: Mon, 27 Aug 2012 23:33:09 +0100>, <From: Sony <someone@somesuch.com>>, <To: test@emailtesting.com >, <Cc: >, <Bcc: >, <Subject: About your Test Email>, <Mime-Version: 1.0>, <Content-Type: multipart/alternative; boundary=mimepart_503bf5a5a802a_146ee8749b13c38>
+    Send this email? y
 
+   Ok that email just got sent! 
 
+Send emails from the pop server
+    $remail -t test@emailtesting.com -u someone@gmail.com -p
+    Enter your gmail password: *********
+    #<Mail::Message:2244614900, Multipart: true, Headers:<Date: Mon, 27 Aug 2012 23:33:09 +0100>, <From: Sony <someone@somesuch.com>>, <To: test@emailtesting.com >, <Cc: >, <Bcc: >, <Subject: About your Test Email>, <Mime-Version: 1.0>, <Content-Type: multipart/alternative; boundary=mimepart_503bf5a5a802a_146ee8749b13c38>
+
+    Send this email? y
+
+    Ok that email just got sent! 
 
 ## Contributing
 
