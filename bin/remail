@@ -16,7 +16,7 @@ OptionParser.new do|opts|
   end
 
   opts.on( '-w', '--password PASSWORD', "Gmail Password") do|p|
-    options[:password] = p
+    options[:pass] = p
   end
 
   opts.on( '-t', '--to EMAIL', 'Send the email to who?' ) do|t|
@@ -63,6 +63,7 @@ end
 
 
 unless options[:pop]
+  mail = []
   ARGV.each do |f|
     mail <<  Mail.read(f)
   end
@@ -72,17 +73,16 @@ end
 
 mail.each do |mail|
   mail.message_id = nil
-  mail.to = options[:to] || mail.to
   mail.cc = nil
   mail.bcc = nil
+  mail.to = options[:to] || mail.to
   pp mail
   send = agree("Send this email?  ", true)
   puts ""
   if send
     mail.to = options[:to] || ask('Send this email to who')
-    mail.content_transfer_encoding = "quoted-printable"
-    puts mail.deliver
-    puts "Ok sent!
+    mail.deliver
+    puts "Ok that email just got sent!
     "
   end
 end
