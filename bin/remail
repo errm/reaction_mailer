@@ -44,18 +44,15 @@ else
   domain = 'gmail.com'
 end
 
-mail_settings = {
-  :address              => "smtp.gmail.com",
-  :port                 => 587,
-  :domain               => domain,
-  :user_name            => options[:user],
-  :password             => options[:pass],
-  :authentication       => 'plain',
-  :enable_starttls_auto => true
-}
-
 Mail.defaults do
-  delivery_method :smtp, mail_settings
+  delivery_method :smtp, :address => "smtp.gmail.com",
+                         :port                 => 587,
+                         :domain               => domain,
+                         :user_name            => options[:user],
+                         :password             => options[:pass],
+                         :authentication       => 'plain',
+                         :enable_starttls_auto => true
+
   retriever_method :pop3, :address    => "localhost",
                           :port       => 2220,
                           :user_name  => 'reaction',
