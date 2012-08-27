@@ -1,0 +1,87 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "highline/import"
+require "mail"
+require 'optparse'
+require 'pp'
+
+options = Hash.new(false)
+
+OptionParser.new do|opts|
+  opts.banner = "Usage: remail [options] file1 file2 ... \n\n"
+  
+  opts.on( '-u', '--username USERNAME', "Gmail Username" ) do|u|
+    options[:user] = u
+  end
+
+  opts.on( '-w', '--password PASSWORD', "Gmail Password") do|p|
+    options[:password] = p
+  end
+
+  opts.on( '-t', '--to EMAIL', 'Send the email to who?' ) do|t|
+    options[:to] = t
+  end
+
+  opts.on( '-p', '--pop', 'Read the emails to send from popthis') do
+    options[:pop] = true
+  end
+
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end.parse!
+
+options[:user] = ask("Enter your gmail username:  ") unless options[:user]
+options[:pass] = ask("Enter your gmail password:  ") { |q| q.echo = "*" } unless options[:pass]
+
+if /@(.*$)/.match(options[:user])
+  domain = /@(.*$)/.match(options[:user])[1]
+else
+  domain = 'gmail.com'
+end
+
+mail_settings = {
+  :address              => "smtp.gmail.com",
+  :port                 => 587,
+  :domain               => domain,
+  :user_name            => options[:user],
+  :password             => options[:pass],
+  :authentication       => 'plain',
+  :enable_starttls_auto => true
+}
+
+Mail.defaults do
+  delivery_method :smtp, mail_settings
+  retriever_method :pop3, :address    => "localhost",
+                          :port       => 2220,
+                          :user_name  => 'reaction',
+                          :password   => 'canttouchthis'
+end
+
+
+
+unless options[:pop]
+  ARGV.each do |f|
+    mail <<  Mail.read(f)
+  end
+else
+  mail = Mail.all
+end
+
+mail.each do |mail|
+  mail.message_id = nil
+  mail.to = options[:to] || mail.to
+  pp mail
+  send = agree("Send this email?  ", true)
+  puts ""
+  if send
+    mail.to = options[:to] || ask('Send this email to who')
+    mail.content_transfer_encoding = "quoted-printable"
+    puts mail.deliver
+    puts "Ok sent!
+    "
+  end
+end
+
