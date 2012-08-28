@@ -38,11 +38,7 @@ end.parse!
 options[:user] = ask("Enter your gmail username:  ") unless options[:user]
 options[:pass] = ask("Enter your gmail password:  ") { |q| q.echo = "*" } unless options[:pass]
 
-if /@(.*$)/.match(options[:user])
-  domain = /@(.*$)/.match(options[:user])[1]
-else
-  domain = 'gmail.com'
-end
+domain = options[:user][/@(.*$)/] || 'gmail.com'
 
 Mail.defaults do
   delivery_method :smtp, :address => "smtp.gmail.com",
